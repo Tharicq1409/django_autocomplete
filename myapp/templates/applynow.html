@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    
+</head>
+<body>
+    <!--
+    <header>
+        
+        <h1>Netinfo</h1>
+    </header>
+-->
+    <h1>Apply Now</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+        <button id="reloadButton">Reload</button>
+    </form>
+    
+    <script>
+        $(function () {
+            $("#id_skills").autocomplete({
+                source: "{% url 'autocomplete' %}",
+                minLength: 1,
+                select: function (event, ui) {
+                    event.preventDefault();
+                    var existingText = this.value.split(',').slice(0, -1).join(',');
+                    this.value = existingText + (existingText.length > 0 ? ',' : '') + ui.item.value;
+                }
+            });
+        });
+
+        $(function () {
+            $("#id_city").autocomplete({
+                source: "{% url 'city-autocomplete' %}",  
+                minLength: 3,
+            });
+        });
+
+        $(function () {
+            $("#id_state").autocomplete({
+                source: "{% url 'state-autocomplete' %}",  
+                minLength: 3,
+            });
+        });
+
+        $("#reloadButton").on("click", function() {
+            location.reload(true);  // Reload the page
+        });
+
+    </script>
+</body>
+</html>
